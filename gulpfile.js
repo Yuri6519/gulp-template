@@ -14,6 +14,8 @@ const stylus = require('gulp-stylus');
 
 const imagemin = require('gulp-imagemin');
 
+var htmlclean = require('gulp-htmlclean');
+
 // css
 const cssFiles = [
   './src/css/main.css',
@@ -102,8 +104,14 @@ const minimazeImage = () => (
 );
 
 const html = () => (
-  gulp.src('./index.html')
+  gulp.src('./*.html')
+  .pipe(htmlclean())
   .pipe(gulp.dest('./build'))
+);
+
+const fonts = () => (
+  gulp.src('./src/fonts/*{ttf,woff,woff2,svg,eot}')
+  .pipe(gulp.dest('./build/fonts'))
 );
 
 const watch = () => {
@@ -132,12 +140,15 @@ const watch = () => {
   // img
   gulp.watch('./src/img/**', minimazeImage);
 
+  // fonts
+  fulp.watch('./src/fonts', fonts);
+
 }  
 
 // gulp.task('style', styles);
 // gulp.task('script', scripts);
 // gulp.task('del', clean);
 // gulp.task('watch', watch);
-gulp.task('build', gulp.series(clean, gulp.parallel(styles, scripts, minimazeImage, html)));
+gulp.task('build', gulp.series(clean, gulp.parallel(styles, scripts, minimazeImage, html, fonts)));
 gulp.task('default', gulp.series('build', watch));
 
