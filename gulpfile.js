@@ -32,14 +32,18 @@ const sassFiles = [
 // less
 const lessFiles = [
   './src/less/global.less',
-  './src/less/main.less',
-  './src/less/media.less'
+  './src/less/**/*.less',
+  // here is default
+  // './src/less/main.less',
+  // './src/less/media.less'
 ]
 
 
 const jsFiles = [
-  './src/js/lib.js',
-  './src/js/main.js'
+  './src/js/*.js',
+  // default
+  // './src/js/lib.js',
+  // './src/js/main.js'
 ]
 
 // // css
