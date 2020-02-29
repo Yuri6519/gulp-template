@@ -141,7 +141,7 @@ const watch = () => {
   gulp.watch('./src/img/**', minimazeImage);
 
   // fonts
-  fulp.watch('./src/fonts', fonts);
+  gulp.watch('./src/fonts', fonts);
 
 }  
 
