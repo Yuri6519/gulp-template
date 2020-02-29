@@ -121,12 +121,12 @@ const fonts = () => (
 const watch = () => {
   browserSync.init({
     server: {
-        baseDir: "./"
+        baseDir: "./build/"
     }
   });
 
-  //html
-  gulp.watch('./*.html').on('change', browserSync.reload);
+  //html - especially written in this way for the sake of practise
+  gulp.watch('./*.html').on('change', gulp.series(html, browserSync.reload));
  
   // css
   //gulp.watch('./src/css/**/*.css', styles);
