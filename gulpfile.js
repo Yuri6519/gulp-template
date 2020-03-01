@@ -31,7 +31,7 @@ const sassFiles = [
 
 // less
 const lessFiles = [
-  './node_modules/normalize.css/normalize.css',
+  //'./node_modules/normalize.css/normalize.css',
   './src/less/global.less',
   './src/less/common/main.less',
   './src/less/common/**/*.less',
