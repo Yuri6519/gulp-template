@@ -129,7 +129,7 @@ const watch = () => {
   });
 
   //html - especially written in this way for the sake of practise
-  gulp.watch('./*.html').on('change', gulp.series(html, browserSync.reload));
+  gulp.watch('./src/html/**/*.html').on('change', gulp.series(html, browserSync.reload));
  
   // css
   //gulp.watch('./src/css/**/*.css', styles);
