@@ -13,8 +13,8 @@ const less = require('gulp-less');
 const stylus = require('gulp-stylus');
 
 const imagemin = require('gulp-imagemin');
-
-var htmlclean = require('gulp-htmlclean');
+const htmlclean = require('gulp-htmlclean');
+const rigger = require('gulp-rigger');
 
 // css
 const cssFiles = [
@@ -110,7 +110,8 @@ const minimazeImage = () => (
 );
 
 const html = () => (
-  gulp.src('./*.html')
+  gulp.src('./src/html/*.html')
+  .pipe(rigger())
   .pipe(htmlclean())
   .pipe(gulp.dest('./build'))
 );
