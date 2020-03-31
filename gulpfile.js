@@ -24,9 +24,10 @@ const cssFiles = [
 
 // scss & sass
 const sassFiles = [
-  './src/scss/global.sass',
-  './src/scss/main.scss',
-  './src/scss/media.scss'
+  './src/scss/global.scss',
+  './src/scss/common/main.scss',
+  './src/scss/common/**/*.scss',
+  './src/scss/media/**/*.scss',
 ]
 
 // less
@@ -74,27 +75,27 @@ const jsFiles = [
 // less
 const styles = () => (
   gulp.src(lessFiles)
-  .pipe(sourcemaps.init())
-  .pipe(less())
-  .pipe(concat('styles.css'))
-  .pipe(autoprefixer({cascade: false}))
-  .pipe(cleanCSS({level: 2}))
-  .pipe(sourcemaps.write('./'))
-  .pipe(gulp.dest('build/css'))
-  .pipe(browserSync.stream())
+    .pipe(sourcemaps.init())
+    .pipe(less())
+    .pipe(concat('styles.css'))
+    .pipe(autoprefixer({ cascade: false }))
+    .pipe(cleanCSS({ level: 2 }))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('build/css'))
+    .pipe(browserSync.stream())
 )
 
-const scripts = () =>(
+const scripts = () => (
   gulp.src(jsFiles)
-  .pipe(concat('script.js'))
-  .pipe(babel({
-    presets: ['@babel/env']
-  }))
-  .pipe(uglify({
-    toplevel: true
-  }))
-  .pipe(gulp.dest('build/js'))
-  .pipe(browserSync.stream())
+    .pipe(concat('script.js'))
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
+    .pipe(uglify({
+      toplevel: true
+    }))
+    .pipe(gulp.dest('build/js'))
+    .pipe(browserSync.stream())
 )
 
 const clean = () => (
@@ -103,34 +104,49 @@ const clean = () => (
 
 const minimazeImage = () => (
   gulp.src('./src/img/**')
-  .pipe(imagemin({
-    progressive: true
-  }))
-  .pipe(gulp.dest('./build/img'))
+    .pipe(imagemin({
+      progressive: true
+    }))
+    .pipe(gulp.dest('./build/img'))
 );
 
 const html = () => (
   gulp.src('./src/html/*.html')
-  .pipe(rigger())
-  .pipe(htmlclean())
-  .pipe(gulp.dest('./build'))
+    .pipe(rigger())
+    .pipe(htmlclean())
+    .pipe(gulp.dest('./build'))
 );
 
 const fonts = () => (
   gulp.src('./src/fonts/*{ttf,woff,woff2,svg,eot}')
-  .pipe(gulp.dest('./build/fonts'))
+    .pipe(gulp.dest('./build/fonts'))
 );
+
+const htmlPreBuild = () => (
+  gulp.src('./src/html/*.html')
+    .pipe(rigger())
+    .pipe(gulp.dest('./build'))
+);
+
+const scriptsPreBuid = () => (
+  gulp.src(jsFiles)
+    .pipe(concat('script.js'))
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
+    .pipe(gulp.dest('build/js'))
+)
 
 const watch = () => {
   browserSync.init({
     server: {
-        baseDir: "./build/"
+      baseDir: "./build/"
     }
   });
 
   //html - especially written in this way for the sake of practise
   gulp.watch('./src/html/**/*.html').on('change', gulp.series(html, browserSync.reload));
- 
+
   // css
   //gulp.watch('./src/css/**/*.css', styles);
 
@@ -150,12 +166,18 @@ const watch = () => {
   // fonts
   gulp.watch('./src/fonts', fonts);
 
-}  
+}
 
 // gulp.task('style', styles);
 // gulp.task('script', scripts);
 // gulp.task('del', clean);
 // gulp.task('watch', watch);
+
+gulp.task('pre', gulp.parallel(htmlPreBuild, scriptsPreBuid));
+gulp.task('build-pre', gulp.series(clean, gulp.parallel(styles, scriptsPreBuid, minimazeImage, htmlPreBuild, fonts)));
+gulp.task('run-pre', gulp.series('build-pre', watch));
+
+
 gulp.task('build', gulp.series(clean, gulp.parallel(styles, scripts, minimazeImage, html, fonts)));
 gulp.task('default', gulp.series('build', watch));
 
